@@ -1,0 +1,58 @@
+---
+all:
+  vars:
+    ansible_user: ntc
+    ansible_password: ntc123
+    ansible_connection: ansible.netcommon.network_cli
+  children:
+    ios:
+      hosts:
+        csr[1:3]:
+      vars:
+        ansible_network_os: cisco.ios.ios
+
+    eos:
+      hosts:
+        eos-leaf[1:2]:
+        eos-spine[1:2]:
+      vars:
+        ansible_network_os: arista.eos.eos
+
+    nxos:
+      hosts:
+        nxos-spine[1:2]:
+      vars:
+        ansible_network_os: cisco.nxos.nxos
+
+    vmx:
+      hosts:
+        vmx[1:3]:
+      vars:
+        ansible_network_os: junipernetworks.junos.junos
+        ansible_connection: ansible.netcommon.netconf
+
+    new_york:
+      children:
+        nxos:
+
+    california:
+      children:
+        ios:
+
+    arizona:
+      children:
+        eos:
+
+    jersey:
+      children:
+        vmx:
+
+    west_cost:
+      children:
+        california:
+        arizona:
+
+    east_coast:
+      children:
+        jersey:
+        new_york:
