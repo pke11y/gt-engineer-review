@@ -1,0 +1,4 @@
+---
+ansible_user: ntc
+ansible_password: ntc123
+ansible_connection: ansible.netcommon.network_cli
