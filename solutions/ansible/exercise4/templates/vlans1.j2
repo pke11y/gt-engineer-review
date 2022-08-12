@@ -1,0 +1,6 @@
+{% for item in vlans1 %}
+vlan {{ item.id }} 
+{% if item.name is defined %}
+  name {{ item.name }} 
+{% endif %}
+{% endfor %}
