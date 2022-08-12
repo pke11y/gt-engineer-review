@@ -1,0 +1,48 @@
+---
+- hosts: all
+  name: Generate Configs and push to devices
+  gather_facts: true
+  tasks:
+    
+    - name: Check IOS compliance
+      ansible.builtin.assert:
+        that: ansible_facts["net_version"] in supported_os_versions[ansible_facts['net_system']]
+      register: output
+      ignore_errors: True
+    
+    - name: Register necessary variables
+      ansible.builtin.set_fact:
+        compliance_result: "{% if output['msg']=='All assertions passed' %}Pass{% else %}Fail{% endif %}"
+        date: "{{ lookup('pipe', 'date +%Y%m%d%H%M') }}"
+        
+    - name: Register compliance reports
+      ansible.builtin.set_fact:    
+        compliance_report_txt: |
+          ---
+          Hostname: Hostname: {{ inventory_hostname }}
+          Model:  {{ ansible_facts['net_model'] }}
+          OS Version: {{ ansible_facts['net_version'] }}
+          Compliant (Pass/Fail): {{ compliance_result }}
+        compliance_report_csv: "{{ inventory_hostname }},{{ ansible_facts['net_model'] }},{{ ansible_facts['net_version'] }},{{ compliance_result }}"
+
+    - name: Write report into .txt file
+      ansible.builtin.lineinfile:
+        insertafter: EOF
+        dest: "reports/report_{{ date }}.txt"
+        line: "{{ compliance_report_txt }}"
+        create: true
+        state: present
+
+    - name: Create csv file and add header
+      ansible.builtin.lineinfile:
+        dest: "reports/report_{{ date }}.csv"
+        line: 
+          Hostname,Model,OS Version,Compliant (Pass/Fail)
+        create: true
+        state: present
+
+    - name: Write report to .csv file
+      ansible.builtin.lineinfile:
+        insertafter: EOF
+        dest: "reports/report_{{ date }}.csv"
+        line: "{{ compliance_report_csv }}"
