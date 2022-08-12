@@ -1,8 +1,7 @@
 ---
 - hosts: eos, nxos
-# - hosts: eos
   name: Generate Configs and push to devices
-  gather_facts: no
+  gather_facts: false
   tasks:
     - name: Generate 1st Config with Jinja2
       template:
@@ -33,11 +32,18 @@
       cisco.nxos.nxos_config:
         lines: "{{lookup('file', 'out/{{ inventory_hostname}}.cfg')}}"
       when: inventory_hostname in groups["nxos"]
-      
-    # - name: Generate 3st Config with Jinja2
-    #   template:
-    #     src: "templates/vlans3.j2"
-    #     dest: "out/{{ inventory_hostname }}.cfg"
 
+    - name: Generate 3st Config with Jinja2
+      template:
+        src: "templates/vlans3.j2"
+        dest: "out/{{ inventory_hostname }}.cfg"
 
+    - name: Create VLANs to Arista EOS devices
+      arista.eos.eos_config:
+        lines: "{{lookup('file', 'out/{{ inventory_hostname}}.cfg')}}"
+      when: inventory_hostname in groups["eos"]
 
+    - name: Create VLANs to Cisco IOS devices
+      cisco.nxos.nxos_config:
+        lines: "{{lookup('file', 'out/{{ inventory_hostname}}.cfg')}}"
+      when: inventory_hostname in groups["nxos"]
