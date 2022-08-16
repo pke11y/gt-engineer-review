@@ -1,0 +1,11 @@
+{% for item in credentials %}
+{%- if "ios" in group_names %}
+{%- include "ios_users_config.j2" %}
+{%- elif "eos" in group_names  %}
+{%- include "eos_users_config.j2" %}
+{%- elif "nxos" in group_names %}
+{%- include "nxos_users_config.j2" %}
+{%- elif "vmx" in group_names %}
+{%- include "vmx_users_config.j2" %}
+{%- endif %}
+{% endfor %}
