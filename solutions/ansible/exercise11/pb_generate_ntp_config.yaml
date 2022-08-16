@@ -1,0 +1,12 @@
+---
+- hosts: all
+  name: Configure NTP servers
+  gather_facts: false
+  vars:
+    probes_sent: 1
+  tasks:
+
+    - name: Generate NTP configuration
+      template:
+        src: "templates/ntp_config.j2"
+        dest: "out/{{ inventory_hostname }}.cfg"
