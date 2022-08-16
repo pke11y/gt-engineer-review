@@ -7,7 +7,7 @@
 {% endif %}
 ntp server {{ ntp.servers[0] }} prefer
 {% for item in ntp.servers %}
-{% if loop.index-1 !=0 %}
+{% if loop.index0 !=0 %}
 ntp server {{ item }}
 {% endif %}
 {% endfor %}
