@@ -1,0 +1,25 @@
+---
+ansible_network_os: cisco.nxos.nxos
+vlans1:
+  - id: 10
+    name: web_vlan
+  - id: 20
+    name: app_vlan
+  - id: 30
+  - id: 40
+    name: misc_vlan
+
+vlans2:
+  10: web_vlan
+  20: app_vlan
+  30: db_vlan
+  40: misc_vlan
+
+vlans3:
+  10:
+    name: web_vlan
+  20: {}
+  30:
+    name: db_vlan
+  40:
+    name: misc_vlan
