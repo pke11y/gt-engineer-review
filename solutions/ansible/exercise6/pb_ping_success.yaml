@@ -44,6 +44,7 @@
       ansible.builtin.lineinfile:
         insertafter: EOF
         dest: "reports/report_{{ date }}.csv"
-        line: "{{ inventory_hostname }},{{ item['dest'] }},{{ item['packet_loss'] }},{{
-          item['percentage'] }}%,{% if item['percentage']>=80 %}Success{% else %}Failure{% endif %}"
+        line: "{{ inventory_hostname }},{{ item['dest'] }},{{
+          item['packet_loss'] }},{{ item['percentage'] }}%,
+          {% if item['percentage']>=80 %}Success{% else %}Failure{% endif %}"
       loop: "{{ host_results }}"
