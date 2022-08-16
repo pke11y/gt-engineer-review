@@ -1,0 +1,45 @@
+---
+all:
+  children:
+    ios:
+      hosts:
+        csr[1:3]:
+
+    eos:
+      hosts:
+        eos-leaf[1:2]:
+        eos-spine[1:2]:
+
+    nxos:
+      hosts:
+        nxos-spine[1:2]:
+
+    vmx:
+      hosts:
+        vmx[1:3]:
+
+    new_york:
+      children:
+        nxos:
+
+    california:
+      children:
+        ios:
+
+    arizona:
+      children:
+        eos:
+
+    jersey:
+      children:
+        vmx:
+
+    west_cost:
+      children:
+        california:
+        arizona:
+
+    east_coast:
+      children:
+        jersey:
+        new_york:

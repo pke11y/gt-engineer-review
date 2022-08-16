@@ -1,0 +1,10 @@
+Device,Destination,Success Rate,Status
+csr1,8.8.8.8,1,0%,Failure
+csr2,8.8.8.8,1,0%,Failure
+csr3,8.8.8.8,1,0%,Failure
+csr1,4.4.4.4,1,0%,Failure
+csr2,4.4.4.4,1,0%,Failure
+csr3,4.4.4.4,1,0%,Failure
+csr1,198.6.1.4,1,0%,Failure
+csr2,198.6.1.4,1,0%,Failure
+csr3,198.6.1.4,1,0%,Failure

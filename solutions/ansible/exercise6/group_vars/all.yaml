@@ -1,0 +1,8 @@
+---
+ansible_user: ntc
+ansible_password: ntc123
+ansible_connection: ansible.netcommon.network_cli
+ping_destinations:
+  - 8.8.8.8
+  - 4.4.4.4
+  - 198.6.1.4
