@@ -1,0 +1,49 @@
+---
+- hosts: ios
+  name: Generate BGP Configs and push to devices
+  gather_facts: false
+  tasks:
+    - name: Generate BGP Configs with Jinja2
+      template:
+        src: "templates/bgp_config.j2"
+        dest: "out/{{ inventory_hostname }}.cfg"
+
+    - name: Configure BGP on devices using Jinja2
+      cisco.ios.ios_config:
+        src: "templates/bgp_config.j2"
+
+    - name: Parse output
+      ansible.utils.cli_parse:
+        command: "show ip bgp summary"
+        parser:
+          name: ansible.netcommon.ntc_templates
+      register: bgp_summary
+
+    - name: Print BGP summary
+      ansible.builtin.debug:
+        var: bgp_summary['parsed']
+
+    - name: Register necessary variables
+      ansible.builtin.set_fact:
+        date: "{{ lookup('pipe', 'date +%Y%m%d%H%M') }}"
+
+    - name: Create csv file and add header
+      ansible.builtin.lineinfile:
+        dest: "reports/report_{{ date }}.csv"
+        line:
+          Device,BGP Neighbor,BGP Neighbor ASn,Status
+        create: true
+        state: present
+
+    - name: Write report into .csv file
+      ansible.builtin.lineinfile:
+        insertafter: EOF
+        dest: "reports/report_{{ date }}.csv"
+        line: "{{ inventory_hostname }},{{ item['bgp_neigh'] }},{{
+          item['neigh_as'] }},{{ item['state_pfxrcd'] }}"
+      loop: "{{ bgp_summary['parsed'] }}"
+
+    - name: Assert BGP adjacencies are Up
+      ansible.builtin.assert:
+        that: "'UP' in {{ item['state_pfxrcd'] }}"
+      loop: "{{ bgp_summary['parsed'] }}"
