@@ -2,12 +2,10 @@
 - hosts: all
   name: Generates config for credentials
   gather_facts: false
-  vars:
-    probes_sent: 1
   tasks:
 
     - name: Generate config using Jinja2
       template:
-        src: "templates/users_config.j2"
-        dest: "out/{{ inventory_hostname }}.cfg"
-        trim_blocks: false
+        src: "users_config.j2"
+        dest: "users_config/{{ inventory_hostname }}.cfg"
+        # trim_blocks: false
