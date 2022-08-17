@@ -9,7 +9,7 @@
     - name: Generate Interface configuration
       template:
         src: "templates/interface_config.j2"
-        dest: "out/{{ inventory_hostname }}.cfg"
+        dest: "intf_configs/{{ inventory_hostname }}.cfg"
 
     - name: Configurable interfaces IP address
       ansible.netcommon.cli_config:
