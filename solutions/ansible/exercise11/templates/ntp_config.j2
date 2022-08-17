@@ -1,13 +1,13 @@
 {% if "nyc" in group_names %}
-    {%- import "nyc_servers.j2" as ntp %}
+{%   import "nyc_servers.j2" as ntp %}
 {% elif "dal-rt06" == inventory_hostname %}
-    {%- import "dal_rt06_servers.j2" as ntp %}
+{%   import "dal_rt06_servers.j2" as ntp %}
 {% else %}
-    {%- import "all_servers.j2" as ntp %}
+{%   import "all_servers.j2" as ntp %}
 {% endif %}
 ntp server {{ ntp.servers[0] }} prefer
 {% for item in ntp.servers %}
-{% if loop.index0 !=0 %}
+{%   if loop.index0 !=0 %}
 ntp server {{ item }}
-{% endif %}
+{%   endif %}
 {% endfor %}
