@@ -1,0 +1,32 @@
+---
+- hosts: localhost
+  name: Generate variables
+  gather_facts: false
+  tasks:
+    - name: Generate variables
+      set_fact:
+        list_ordered_interfaces: "{{ interfaces_config |
+          sort(attribute='name') }}"
+        list_auto_speed_interfaces: "{{ interfaces_config |
+          selectattr('speed', 'equalto', 'auto') }}"
+        list_no_desc_interfaces: "{{ interfaces_config |
+          rejectattr('description', 'defined') | list }}"
+        first_non1000_speed_interface: "{{ interfaces_config |
+          rejectattr('speed','equalto', 1000) | first }}"
+
+    - name: Generate dict of interfaces
+      set_fact:
+        dict_interfaces: "{{ dict_interfaces|default({}) | combine({
+            item['name']: {}
+          }) }}"
+      loop: "{{ interfaces_config }}"
+
+    - name: Print all variables
+      debug:
+        var: "{{ item }}"
+      with_items:
+        - list_ordered_interfaces
+        - list_auto_speed_interfaces
+        - list_no_desc_interfaces
+        - first_non1000_speed_interface
+        - dict_interfaces
