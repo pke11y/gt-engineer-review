@@ -1,4 +1,6 @@
 {% for vlan_id, vlan_name in vlans2.items() %}
 vlan {{ vlan_id }}
+{%   if vlan_name | length %}
   name {{ vlan_name }}
+{%   endif %}
 {% endfor %}
