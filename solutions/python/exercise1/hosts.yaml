@@ -8,46 +8,46 @@ devices:
     host: csr2
     device_type: cisco_ios
 
-  # csr3:
-  #   host: csr3
-  #   device_type: cisco_ios
+  csr3:
+    host: csr3
+    device_type: cisco_ios
 
   eos-leaf1:
     host: eos-leaf1
     device_type: arista_eos
 
-  # eos-leaf2:
-  #   host: eos-leaf2
-  #   device_type: arista_eos
+  eos-leaf2:
+    host: eos-leaf2
+    device_type: arista_eos
 
-  # eos-leaf3:
-  #   host: eos-leaf3
-  #   device_type: arista_eos
+  eos-leaf3:
+    host: eos-leaf3
+    device_type: arista_eos
 
-  # eos-spine1:
-  #   host: eos-spine1
-  #   device_type: arista_eos
+  eos-spine1:
+    host: eos-spine1
+    device_type: arista_eos
 
-  # eos-spine2:
-  #   host: eos-spine2
-  #   device_type: arista_eos
+  eos-spine2:
+    host: eos-spine2
+    device_type: arista_eos
 
   nxos-spine1:
     host: nxos-spine1
     device_type: cisco_nxos
 
-  # nxos-spine2:
-  #   host: nxos-spine2
-  #   device_type: cisco_nxos
+  nxos-spine2:
+    host: nxos-spine2
+    device_type: cisco_nxos
 
   vmx1:
     host: vmx1
     device_type: juniper_junos
 
-  # vmx2:
-  #   host: vmx2
-  #   device_type: juniper_junos
+  vmx2:
+    host: vmx2
+    device_type: juniper_junos
 
-  # vmx3:
-  #   host: vmx3
-  #   device_type: juniper_junos
+  vmx3:
+    host: vmx3
+    device_type: juniper_junos
