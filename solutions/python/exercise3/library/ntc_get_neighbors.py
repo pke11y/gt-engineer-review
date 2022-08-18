@@ -67,13 +67,6 @@ from napalm import get_network_driver
 import logging
 
 
-def print_shit(data):
-
-    result = data["os"]
-
-    return result
-
-
 def get_lldp_neighbors(driver_os: str, device_info: dict) -> dict:
     """Get lldp neighbors from device with NAPALM.
     Args:
