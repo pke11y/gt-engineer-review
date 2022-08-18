@@ -1,17 +1,15 @@
-"""Get backups of running config from devices."""
-from code import interact
+"""Get lldp neighbors from devices."""
 import sys
 import logging
 from pathlib import Path
-from textwrap import indent
-import yaml
 import json
+import yaml
 from yaml.loader import FullLoader
 from napalm import get_network_driver
-from constants import USERNAME, PASSWORD, BACKUP_DIR, COMMANDS
+from constants import USERNAME, PASSWORD
 
 
-def get_lldp_neighbors(device_info: dict)-> dict:
+def get_lldp_neighbors(device_info: dict) -> dict:
     """Get lldp neighbors from device with NAPALM.
 
     Args:
@@ -32,9 +30,12 @@ def get_lldp_neighbors(device_info: dict)-> dict:
             device_lldp_neighbors = device.get_lldp_neighbors()
             return device_lldp_neighbors
     except BaseException as err:
-        logging.error(f"Could not connect to device { device_info['host'] } with error { err }")
+        logging.error(
+            f"Could not connect to device { device_info['host'] } with error { err }"
+        )
 
     return device_lldp_neighbors
+
 
 def replace_dict_key(lldp_neighbors: dict) -> dict:
     """Replace keys for neighbors under interfaces in dict.
@@ -52,6 +53,7 @@ def replace_dict_key(lldp_neighbors: dict) -> dict:
                 neighbor["neighbor_interface"] = neighbor.pop("port")
 
     return lldp_neighbors
+
 
 def write_json_file(file_name: str, text: dict):
     """Write text to file.
@@ -101,7 +103,7 @@ def main() -> None:
     logging.basicConfig(level=logging.INFO)
     devices_info = read_yaml("hosts.yaml")
     lldp_neighbors = {}
-    
+
     for device, device_info in devices_info["devices"].items():
         device_info["username"] = USERNAME
         device_info["password"] = PASSWORD
