@@ -1,0 +1,26 @@
+---
+- hosts: ios, nxos
+  gather_facts: false
+  tasks:
+  - name: Configure SNMP through module
+    ntc_snmp:
+      os: "{{ ansible_network_os }}"
+      provider:
+        username: ntc
+        password: ntc123
+        hostname: "{{ inventory_hostname }}"
+      community_strings:
+        - type: ro
+          string: public
+        - type: rw
+          string: private-new
+        - type: rw
+          string: private-makis
+      contact: Jason
+      location: New_York
+      replace: false
+    register: result
+
+  - name: Print lldp neighbors
+    debug:
+      msg: "{{ result }}"
