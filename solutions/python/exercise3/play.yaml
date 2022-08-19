@@ -1,0 +1,16 @@
+---
+- hosts: all
+  gather_facts: false
+  tasks:
+  - name: Get lldp neighbors through module
+    ntc_get_neighbors:
+      os: "{{ ansible_network_os }}"
+      provider:
+        username: ntc
+        password: ntc123
+        hostname: "{{ inventory_hostname }}"
+    register: lldp_neighbors
+
+  - name: Print lldp neighbors
+    debug:
+      msg: "{{ lldp_neighbors }}"
