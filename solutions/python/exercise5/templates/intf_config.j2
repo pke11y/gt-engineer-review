@@ -1,0 +1,16 @@
+{% for intf in interfaces | expand_interfaces(profiles) %}
+interface {{ intf["name"] }}
+  switchport mode access
+  switchport access vlan {{ intf["access_vlan"] }}
+{%   if "speed" in intf %}
+  speed {{ intf["speed"] }}
+{%   endif %}
+{%   if "duplex" in intf %}
+  duplex {{ intf["duplex"] }}
+{%   endif %}
+{%   if intf["admin_state"] == "up" %}
+  no shutdown
+{%   else %}
+  shutdown
+{%   endif %}
+{% endfor %}
