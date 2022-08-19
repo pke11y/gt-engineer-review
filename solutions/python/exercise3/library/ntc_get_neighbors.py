@@ -1,4 +1,8 @@
 #!/usr/bin/python
+"""Ansible module to get lldp neighbors with NAPALM."""
+import logging
+from ansible.module_utils.basic import AnsibleModule
+from napalm import get_network_driver
 
 DOCUMENTATION = r"""
 ---
@@ -60,12 +64,6 @@ lldp_neighbors:
             }
 """
 
-from unittest import result
-from urllib import response
-from ansible.module_utils.basic import *
-from napalm import get_network_driver
-import logging
-
 
 def get_lldp_neighbors(driver_os: str, device_info: dict) -> dict:
     """Get lldp neighbors from device with NAPALM.
@@ -109,7 +107,7 @@ def replace_dict_key(lldp_neighbors: dict) -> dict:
 
 
 def main():
-
+    """Ansible module main function"""
     fields = {
         "os": {"required": True, "type": "str"},
         "provider": {"required": True, "type": "dict"},
