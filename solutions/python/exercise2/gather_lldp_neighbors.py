@@ -55,7 +55,7 @@ def replace_dict_key(lldp_neighbors: dict) -> dict:
     return lldp_neighbors
 
 
-def write_json_file(file_name: str, text: dict):
+def write_json_file(file_name: str, text: dict) -> None:
     """Write text to file.
 
     Args:
