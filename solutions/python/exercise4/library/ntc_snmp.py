@@ -28,7 +28,7 @@ options:
         description: SNMP Community information
         required: true
         type: list of dicts
-    contact: 
+    contact:
         description: SNMP contact information
         required: false
         type: str
@@ -72,7 +72,11 @@ ok: [host] => {
         "changed": true,
         "config_changes": {
             "replaced": false,
-            "snmp_config": "+snmp-server community public RO\n+snmp-server community private-new RW\n+snmp-server community private-makis RW\n+snmp-server contact Jason\n+snmp-server location New_York"
+            "snmp_config": "+snmp-server community public RO\n
+                            +snmp-server community private-new RW\n
+                            +snmp-server community private-makis RW\n
+                            +snmp-server contact Jason\n
+                            +snmp-server location New_York"
         },
         "failed": false
     }
