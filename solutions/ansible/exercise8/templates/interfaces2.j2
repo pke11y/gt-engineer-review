@@ -1,24 +1,24 @@
 {% for interface in interfaces %}
 interface {{ interface.name }}
   switchport mode access
-{% if "access_vlan" in interface %}
+{%   if "access_vlan" in interface %}
   switchport access vlan {{ interface["access_vlan"] }}
-{% else %}
+{%   else %}
   switchport access vlan {{ profiles[interface.profile]["access_vlan"] }}
-{% endif %}
-{% if "speed" in interface %}
+{%   endif %}
+{%   if "speed" in interface %}
   speed {{ interface.speed }}
-{% elif "speed" in profiles[interface.profile] %}
+{%   elif "speed" in profiles[interface.profile] %}
   speed {{ profiles[interface.profile]["speed"] }}
-{% endif %}
-{% if "duplex" in interface %}
+{%   endif %}
+{%   if "duplex" in interface %}
   duplex {{ interface.duplex }}
-{% elif "duplex" in profiles[interface.profile] %}
+{%   elif "duplex" in profiles[interface.profile] %}
   duplex {{ profiles[interface.profile]["duplex"] }}
-{% endif %}
-{% if profiles[interface.profile].get('admin_state') == "down" %}
+{%   endif %}
+{%   if profiles[interface.profile].get('admin_state') == "down" %}
   shutdown
-{% else %}
+{%   else %}
   no shutdown
-{% endif %}
+{%   endif %}
 {% endfor %}
