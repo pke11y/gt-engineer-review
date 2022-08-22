@@ -2,13 +2,15 @@
 - hosts: localhost
   name: Generate Interfaces Configs and push to devices
   gather_facts: false
+  vars:
+    configs_dir: "configs"
   tasks:
     - name: Generate 1st Config with Jinja2
       template:
-        src: "templates/interfaces.j2"
-        dest: "out/interface_config_01.cfg"
+        src: "interfaces.j2"
+        dest: "{{ configs_dir }}/interface_config_01.cfg"
 
     - name: Generate 2st Config with Jinja2
       template:
-        src: "templates/interfaces2.j2"
-        dest: "out/interface_config_02.cfg"
+        src: "interfaces2.j2"
+        dest: "{{ configs_dir }}/interface_config_02.cfg"
