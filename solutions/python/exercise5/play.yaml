@@ -1,0 +1,31 @@
+---
+- hosts: localhost
+  gather_facts: false
+  vars:
+    profiles:
+      user:
+        access_vlan: 10
+        admin_state: up
+        speed: 100
+        duplex: full
+      server:
+        access_vlan: 100
+        admin_state: down
+
+    interfaces:
+      - name: Eth1
+        profile: user
+      - name: Eth[3-4]
+        profile: user
+      - name: Eth[13-15]
+        profile: server
+
+  tasks:
+    - name: Print interfaces
+      debug:
+        msg: "{{ interfaces | expand_interfaces(profiles) }}"
+
+    - name: Generate config
+      template:
+        src: "intf_config.j2"
+        dest: "configs/intf_config.cfg"
