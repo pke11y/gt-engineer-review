@@ -1,0 +1,5 @@
+{%- for community in data["community"] %}
+no snmp-server community {{ community }}
+{%- endfor %}
+no snmp-server location
+no snmp-server contact

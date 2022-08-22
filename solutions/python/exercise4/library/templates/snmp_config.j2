@@ -1,0 +1,9 @@
+{%- for community in data["community_strings"] %}
+snmp-server community {{ community["string"] }} {{ community["type"] | upper }}
+{%- endfor %}
+{%- if data["contact"] %}
+snmp-server contact {{ data["contact"] }}
+{%- endif %}
+{%- if data["location"] %}
+snmp-server location {{ data["location"] }}
+{%- endif %}
