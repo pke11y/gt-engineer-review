@@ -2,15 +2,17 @@
 - hosts: ios
   name: Generate BGP Configs and push to devices
   gather_facts: false
+  vars: 
+    config_dir: bgp_configs
   tasks:
     - name: Generate BGP Configs with Jinja2
       template:
-        src: "templates/bgp_config.j2"
-        dest: "out/{{ inventory_hostname }}.cfg"
+        src: "bgp_config.j2"
+        dest: "{{ config_dir }}/{{ inventory_hostname }}.cfg"
 
     - name: Configure BGP on devices using Jinja2
       cisco.ios.ios_config:
-        src: "templates/bgp_config.j2"
+        src: "bgp_config.j2"
 
     - name: Parse output
       ansible.utils.cli_parse:
@@ -45,5 +47,5 @@
 
     - name: Assert BGP adjacencies are Up
       ansible.builtin.assert:
-        that: "'UP' in {{ item['state_pfxrcd'] }}"
+        that: "'Active' in {{ item['state_pfxrcd'] }}"
       loop: "{{ bgp_summary['parsed'] }}"

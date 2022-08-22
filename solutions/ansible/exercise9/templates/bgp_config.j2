@@ -8,10 +8,10 @@ router bgp {{ bgp['asn'] }}
 {% for neighbor in bgp['neighbors'] %}
  neighbor {{ neighbor['ip_address'] }} remote-as {{ neighbor['asn'] }}
  neighbor {{ neighbor['ip_address'] }} description {{ neighbor['name'] }}
-{% if neighbor.get('community') %}
+{% if "community" in neighbor %}
  neighbor {{ neighbor['ip_address'] }} send-community
 {% endif %}
-{% if neighbor.get('soft') %}
+{% if "soft" in neighbor %}
  neighbor {{ neighbor['ip_address'] }} soft-reconfiguration inbound
 {% endif %}
 {% endfor %}
