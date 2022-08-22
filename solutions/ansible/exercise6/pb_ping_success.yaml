@@ -24,10 +24,6 @@
       loop: "{{ output['results'] }}"
       ignore_errors: true
 
-    - name: Print
-      ansible.builtin.debug:
-        var: host_results
-
     - name: Register necessary variables
       ansible.builtin.set_fact:
         date: "{{ lookup('pipe', 'date +%Y%m%d%H%M') }}"
