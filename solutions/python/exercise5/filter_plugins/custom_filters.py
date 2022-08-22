@@ -1,8 +1,11 @@
-"""Ansible custom jinja2 filters"""
 #!/usr/bin/python
-class FilterModule():
+"""Ansible custom jinja2 filters"""
+
+
+class FilterModule:
+    """Ansible Filter class"""
     def filters(self):
-        """Ansible filters """
+        """Ansible filters"""
         return {"expand_interfaces": self.expand_interfaces}
 
     def expand_interfaces(self, interfaces, profiles):
