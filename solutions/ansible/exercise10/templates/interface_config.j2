@@ -2,7 +2,9 @@
 interface {{ int }}
  ip address {{ int_info.ipaddr | ipaddr('address') }} {{ int_info.ipaddr | ipaddr('netmask') }} 
  description {{ int_info.description }}
-# {% if int_info.get('state') == 'up' %}
-#  no shutdown
-# {% endif %}
+{%   if int_info["state"] == "up" %}
+ no shutdown
+{%   else %}
+ shutdown
+{%   endif %}
 {% endfor %}
