@@ -12,7 +12,7 @@ from netmiko import (
 from constants import USERNAME, PASSWORD, BACKUP_DIR, COMMANDS
 
 
-def send_command(device: dict, command: str) ->str:
+def send_command(device: dict, command: str) -> str:
     """Connect with netmiko and send one command.
 
     Args:
