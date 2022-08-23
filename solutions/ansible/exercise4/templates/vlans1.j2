@@ -1,0 +1,6 @@
+{% for item in vlans1 %}
+vlan {{ item['id'] }} 
+{%   if 'name' in item and item['name'] | length %}
+  name {{ item['name'] }} 
+{%   endif %}
+{% endfor %}

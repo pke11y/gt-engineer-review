@@ -1,0 +1,57 @@
+---
+- hosts: eos, nxos
+  name: Generate Configs and push to devices
+  gather_facts: false
+  vars:
+    config_dir: configs
+  tasks:
+    - name: Generate 1st Config with Jinja2
+      template:
+        src: "vlans1.j2"
+        dest: "{{ config_dir }}/{{ inventory_hostname }}.cfg"
+
+    - name: Create VLANs to Arista EOS devices
+      arista.eos.eos_config:
+        lines: "{{lookup('file', '{{ config_dir }}/{{ inventory_hostname}}.cfg')}}"
+        save_when: changed
+      when: "'eos' in ansible_network_os"
+
+    - name: Create VLANs to Cisco IOS devices
+      cisco.nxos.nxos_config:
+        lines: "{{lookup('file', '{{ config_dir }}/{{ inventory_hostname}}.cfg')}}"
+        save_when: changed
+      when: "'nxos' in ansible_network_os"
+
+    - name: Generate 2st Config with Jinja2
+      template:
+        src: "vlans2.j2"
+        dest: "{{ config_dir }}/{{ inventory_hostname }}.cfg"
+
+    - name: Create VLANs to Arista EOS devices
+      arista.eos.eos_config:
+        lines: "{{lookup('file', '{{ config_dir }}/{{ inventory_hostname}}.cfg')}}"
+        save_when: changed
+      when: "'eos' in ansible_network_os"
+
+    - name: Create VLANs to Cisco IOS devices
+      cisco.nxos.nxos_config:
+        lines: "{{lookup('file', '{{ config_dir }}/{{ inventory_hostname}}.cfg')}}"
+        save_when: changed
+      when: "'nxos' in ansible_network_os"
+
+    - name: Generate 3st Config with Jinja2
+      template:
+        src: "vlans3.j2"
+        dest: "{{ config_dir }}/{{ inventory_hostname }}.cfg"
+
+    - name: Create VLANs to Arista EOS devices
+      arista.eos.eos_config:
+        lines: "{{lookup('file', '{{ config_dir }}/{{ inventory_hostname}}.cfg')}}"
+        save_when: changed
+      when: "'eos' in ansible_network_os"
+
+    - name: Create VLANs to Cisco IOS devices
+      cisco.nxos.nxos_config:
+        lines: "{{lookup('file', '{{ config_dir }}/{{ inventory_hostname}}.cfg')}}"
+        save_when: changed
+      when: "'nxos' in ansible_network_os"

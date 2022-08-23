@@ -1,0 +1,72 @@
+---
+- hosts: ios
+  gather_facts: false
+  tasks:
+    - name: Set Interface IP for Cisco IOS
+      set_fact:
+        interface_ip: "{{ mgmt_subnet | ipaddr(ansible_play_batch.index(inventory_hostname)+1) }}"
+
+    - name: Configure interface IP address for Cisco IOS devices
+      cisco.ios.ios_l3_interfaces:
+        config:
+        - name: Loopback0
+          ipv4:
+          - address: "{{ interface_ip }}"
+
+    - name: Save running to startup
+      cisco.ios.ios_config:
+        save_when: modified
+
+- hosts: nxos
+  gather_facts: false
+  tasks:
+    - name: Set Interface IP for Cisco NXOS
+      set_fact:
+        interface_ip: "{{ mgmt_subnet | ipaddr(ansible_play_batch.index(inventory_hostname)+1) }}"
+
+    - name: Configure interface IP address for Cisco NXOS devices
+      cisco.nxos.nxos_l3_interfaces:
+        config:
+        - name: Loopback0
+          ipv4:
+          - address: "{{ interface_ip }}"
+    
+    - name: Save running to startup
+      cisco.nxos.nxos_config:
+        save_when: modified
+
+- hosts: eos
+  gather_facts: false
+  tasks:
+    - name: Set Interface IP for Arista EOS
+      set_fact:
+        interface_ip: "{{ mgmt_subnet | ipaddr(ansible_play_batch.index(inventory_hostname)+1) }}"
+
+    - name: Configure interface IP address for Arista EOS devices
+      arista.eos.eos_l3_interfaces:
+        config:
+        - name: Loopback0
+          ipv4:
+          - address: "{{ interface_ip }}"
+    
+    - name: Save running to startup
+      arista.eos.eos_config:
+        save_when: modified 
+
+- hosts: vmx
+  gather_facts: false
+  tasks:
+    - name: Set Interface IP for Junos VMX
+      set_fact:
+        interface_ip: "{{ mgmt_subnet | ipaddr(ansible_play_batch.index(inventory_hostname)+1) }}"
+
+    - name: Configure interface IP address for Junos VMX devices
+      junipernetworks.junos.junos_l3_interfaces:
+        config:
+        - name: ge-0/0/7
+          ipv4:
+          - address: "{{ interface_ip }}"
+
+    - name: Save running to startup
+      junipernetworks.junos.junos_config:
+        confirm_commit: yes

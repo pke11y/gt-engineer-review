@@ -1,0 +1,4 @@
+Hostname,Model,OS Version,Compliant (Pass/Fail)
+{% for host in groups['all'] %}
+{{ host }},{{ hostvars[host]['ansible_net_model'] }},{{ hostvars[host]['ansible_net_version'] }},{{ hostvars[host]['compliance_result'] }}
+{% endfor %}

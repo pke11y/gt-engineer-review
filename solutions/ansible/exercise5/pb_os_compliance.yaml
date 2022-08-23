@@ -1,0 +1,26 @@
+---
+- hosts: all
+  name: Generate OS compliance report
+  gather_facts: true
+  tasks:
+
+    - name: Register necessary variables
+      ansible.builtin.set_fact:
+        compliance_result: "{% if ansible_net_version in
+        supported_os_versions[ansible_net_system] %}Pass
+        {% else %}Fail{% endif %}"
+        date: "{{ lookup('pipe', 'date +%Y%m%d%H%M') }}"
+
+    - name: Generate txt report
+      ansible.builtin.template:
+        src: "txt_report.j2"
+        dest: "reports/report_{{ date }}.txt"
+      delegate_to: localhost
+      run_once: true
+
+    - name: Generate csv report
+      ansible.builtin.template:
+        src: "csv_report.j2"
+        dest: "reports/report_{{ date }}.csv"
+      delegate_to: localhost
+      run_once: true
