@@ -1,7 +1,7 @@
 Device,Destination,Success Rate,Status
 {% for host in groups["ios"] %}
 {%   for ping_results in host_results %}
-{{ host }},{{ ping_results["dest"] }},{{ ping_results["percentage"] }}%,{% if ping_results['percentage']>=80 %}Success{% else %}Failure{% endif %}
+{{ host }},{{ ping_results["dest"] }},{{ ping_results["success_rate"] }}%,{% if ping_results['success_rate']>=80 %}Success{% else %}Failure{% endif %}
 
 {%   endfor %}
 {% endfor %}

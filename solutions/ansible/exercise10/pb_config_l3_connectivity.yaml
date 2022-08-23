@@ -16,19 +16,19 @@
         config: "{{ lookup('template', 'interface_config.j2') }}"
 
     - name: Ping checks
-      napalm.napalm.napalm_ping:
-        hostname: "{{ inventory_hostname }}"
-        destination: "{{ item }}"
+      ansible.netcommon.net_ping:
+        dest: "{{ item['value']['neighbor'] }}"
+        source: "{{ item['key'] }}"
         count: "{{ probes_sent }}"
-      loop: "{{ neighbors }}"
+      loop: "{{ interfaces | dict2items }}"
       register: output
 
     - name: Register results per ping
       ansible.builtin.set_fact:
         host_results: "{{ host_results|default([]) + [ {
-            'dest': item.item,
-            'packet_loss': item.ping_results.success.packet_loss,
-            'percentage': item.ping_results.success.packet_loss % probes_sent
+            'dest': item.invocation.module_args.dest,
+            'packet_loss': probes_sent - item.packets_rx,
+            'success_rate': (1 - (item.packets_tx - item.packets_rx) / probes_sent) * 100
              } ] }}"
       loop: "{{ output['results'] }}"
       ignore_errors: true
@@ -51,5 +51,24 @@
 
     - name: Verify neighbor's IP address
       ansible.builtin.assert:
-        that: item | ipv4
-      loop: "{{ neighbors }}"
+        that: item['value']['neighbor'] | ipv4
+      loop: "{{ interfaces | dict2items }}"
+
+    # - name: Fetch interface state and parse with 
+    #   ansible.netcommon.cli_parse:
+    #     command: show interface
+    #     parser:
+    #       name: ansible.netcommon.ntc_templates
+    #   register: interfaces_fact
+
+    # - name: validate configuration with config plugin (see config plugin for criteria examples)
+    #   ansible.utils.validate:
+    #     data: "{{ interfaces_fact['parsed'] }}"
+    #     criteria: "{{ lookup('file',  './criteria/ios_intf_state.json') | from_json }}"
+    #     engine: ansible.utils.jsonschema
+    #   ignore_errors: true
+    #   register: result
+
+    # - name: Print admin state json validation
+    #   debug:
+    #     var: interfaces_fact['parsed']

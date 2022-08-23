@@ -1,8 +1,8 @@
-{% for int, int_info in interfaces.items() %}
-interface {{ int }}
- ip address {{ int_info.ipaddr | ipaddr('address') }} {{ int_info.ipaddr | ipaddr('netmask') }} 
- description {{ int_info.description }}
-{%   if int_info["state"] == "up" %}
+{% for intf, intf_info in interfaces.items() %}
+interface {{ intf }}
+ ip address {{ intf_info.ipaddr | ipaddr('address') }} {{ intf_info.ipaddr | ipaddr('netmask') }} 
+ description {{ intf_info.description }}
+{%   if intf_info["state"] == "up" %}
  no shutdown
 {%   else %}
  shutdown

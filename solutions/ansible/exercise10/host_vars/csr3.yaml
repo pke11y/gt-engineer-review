@@ -1,0 +1,13 @@
+---
+interfaces:
+  GigabitEthernet2:
+    ipaddr: 10.10.13.3/24
+    description: csr1-interconnect
+    state: up
+    neighbor: 10.10.13.1
+
+  GigabitEthernet3:
+    ipaddr: 10.10.23.3/24
+    description: csr2-interconnect
+    state: up
+    neighbor: 10.10.23.2
