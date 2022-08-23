@@ -1,0 +1,20 @@
+---
+profiles_01:
+  user:
+    access_vlan: 10
+    admin_state: up
+    speed: 100
+    duplex: full
+  server:
+    access_vlan: 100
+    admin_state: down
+
+profiles_02:
+  user:
+    access_vlan: 10
+    admin_state: up
+    speed: 100
+    duplex: full
+  server:
+    access_vlan: 100
+    admin_state: down
