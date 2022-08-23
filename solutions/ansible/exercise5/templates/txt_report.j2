@@ -1,7 +1,7 @@
-{% for host in groups["all"] %}
+{% for host in groups['all'] %}
 ---
 Hostname: {{ host }}
-Model:  {{ hostvars[host]["ansible_net_model"] }}
-OS Version: {{ hostvars[host]["ansible_net_version"] }}
-Compliant (Pass/Fail): {{ hostvars[host]["compliance_result"] }}
+Model:  {{ hostvars[host]['ansible_net_model'] }}
+OS Version: {{ hostvars[host]['ansible_net_version'] }}
+Compliant (Pass/Fail): {{ hostvars[host]['compliance_result'] }}
 {% endfor %}

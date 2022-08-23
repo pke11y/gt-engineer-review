@@ -1,6 +1,6 @@
 {% for vlan_id, vlan_info in vlans3.items() %}
 vlan {{ vlan_id }}
-{%   if "name" in vlan_info and vlan_info["name"] | length%}
-  name {{ vlan_info["name"] }}
+{%   if 'name' in vlan_info and vlan_info['name'] | length%}
+  name {{ vlan_info['name'] }}
 {%   endif %}
 {% endfor %}
