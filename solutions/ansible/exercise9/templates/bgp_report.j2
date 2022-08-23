@@ -1,0 +1,6 @@
+Device,BGP Neighbor,BGP Neighbor ASn,Status
+{% for host in ansible_play_hosts %}
+{%   for neighbor in hostvars[host]['bgp_summary']['parsed'] %}
+{{ host }},{{ neighbor['bgp_neigh'] }},{{ neighbor['neigh_as'] }},{{ neighbor['state_pfxrcd'] }}
+{%   endfor %}
+{% endfor %}

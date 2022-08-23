@@ -29,23 +29,22 @@
       ansible.builtin.set_fact:
         date: "{{ lookup('pipe', 'date +%Y%m%d%H%M') }}"
 
-    - name: Create csv file and add header
-      ansible.builtin.lineinfile:
-        dest: "reports/report_{{ date }}.csv"
-        line:
-          Device,BGP Neighbor,BGP Neighbor ASn,Status
-        create: true
-        state: present
-
     - name: Write report into .csv file
-      ansible.builtin.lineinfile:
-        insertafter: EOF
+      template:
+        src: "bgp_report.j2"
         dest: "reports/report_{{ date }}.csv"
-        line: "{{ inventory_hostname }},{{ item['bgp_neigh'] }},{{
-          item['neigh_as'] }},{{ item['state_pfxrcd'] }}"
-      loop: "{{ bgp_summary['parsed'] }}"
+      delegate_to: localhost
+      run_once: true
 
-    - name: Assert BGP adjacencies are Up
+    - name: Assert BGP adjacencies per host are Up
       ansible.builtin.assert:
-        that: "'Active' in {{ item['state_pfxrcd'] }}"
+        that: item['state_pfxrcd'] | lower == "active"
       loop: "{{ bgp_summary['parsed'] }}"
+    
+    - name: Assert all BGP adjacencies are Up
+      ansible.builtin.assert:
+        that: 
+          - (bgp_summary['parsed']  | selectattr('state_pfxrcd', 'equalto', 'Active') | length) == (bgp_summary['parsed'] | length)
+      delegate_to: localhost
+      run_once: true
+
