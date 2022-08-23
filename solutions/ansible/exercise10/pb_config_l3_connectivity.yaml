@@ -1,0 +1,74 @@
+---
+- hosts: ios
+  name: Configure interfaces and test connection
+  gather_facts: false
+  vars:
+    probes_sent: 1
+  tasks:
+
+    - name: Generate Interface configuration
+      template:
+        src: "interface_config.j2"
+        dest: "intf_configs/{{ inventory_hostname }}.cfg"
+
+    - name: Configurable interfaces IP address
+      ansible.netcommon.cli_config:
+        config: "{{ lookup('template', 'interface_config.j2') }}"
+
+    - name: Ping checks
+      ansible.netcommon.net_ping:
+        dest: "{{ item['value']['neighbor'] }}"
+        source: "{{ item['key'] }}"
+        count: "{{ probes_sent }}"
+      loop: "{{ interfaces | dict2items }}"
+      register: output
+
+    - name: Register results per ping
+      ansible.builtin.set_fact:
+        host_results: "{{ host_results|default([]) + [ {
+            'dest': item.invocation.module_args.dest,
+            'packet_loss': probes_sent - item.packets_rx,
+            'success_rate': (1 - (item.packets_tx - item.packets_rx) / probes_sent) * 100
+             } ] }}"
+      loop: "{{ output['results'] }}"
+      ignore_errors: true
+
+    - name: Register necessary variables
+      ansible.builtin.set_fact:
+        date: "{{ lookup('pipe', 'date +%Y%m%d%H%M') }}"
+
+    - name: Generate csv report
+      ansible.builtin.template:
+        src: "ping_report.j2"
+        dest: "reports/report_{{ date }}.csv"
+      delegate_to: localhost
+      run_once: true
+
+    - name: Verify Interfaces' IP address
+      ansible.builtin.assert:
+        that: item['value']['ipaddr'] | ipv4
+      loop: "{{ interfaces | dict2items }}"
+
+    - name: Verify neighbor's IP address
+      ansible.builtin.assert:
+        that: item['value']['neighbor'] | ipv4
+      loop: "{{ interfaces | dict2items }}"
+
+    # - name: Fetch interface state and parse with 
+    #   ansible.netcommon.cli_parse:
+    #     command: show interface
+    #     parser:
+    #       name: ansible.netcommon.ntc_templates
+    #   register: interfaces_fact
+
+    # - name: validate configuration with config plugin (see config plugin for criteria examples)
+    #   ansible.utils.validate:
+    #     data: "{{ interfaces_fact['parsed'] }}"
+    #     criteria: "{{ lookup('file',  './criteria/ios_intf_state.json') | from_json }}"
+    #     engine: ansible.utils.jsonschema
+    #   ignore_errors: true
+    #   register: result
+
+    # - name: Print admin state json validation
+    #   debug:
+    #     var: interfaces_fact['parsed']

@@ -1,0 +1,10 @@
+{% for intf, intf_info in interfaces.items() %}
+interface {{ intf }}
+ ip address {{ intf_info.ipaddr | ipaddr('address') }} {{ intf_info.ipaddr | ipaddr('netmask') }} 
+ description {{ intf_info.description }}
+{%   if intf_info["state"] == "up" %}
+ no shutdown
+{%   else %}
+ shutdown
+{%   endif %}
+{% endfor %}

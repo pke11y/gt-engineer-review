@@ -1,0 +1,7 @@
+Device,Destination,Success Rate,Status
+csr1,10.10.13.3,100.0%,Success
+csr1,10.10.12.2,100.0%,Success
+csr2,10.10.13.3,100.0%,Success
+csr2,10.10.12.2,100.0%,Success
+csr3,10.10.13.3,100.0%,Success
+csr3,10.10.12.2,100.0%,Success
