@@ -1,0 +1,9 @@
+Device,Destination,Success Rate,Status
+{% for host in ansible_play_hosts %}
+{%   if 'host_results' in hostvars[host] %}
+{%     for result in hostvars[host]['host_results'] %}
+{{ host }},{{ result['dest'] }},{{ result['percentage'] }}%,{% if result['percentage']>=80 %}Success{% else %}Failure{% endif %}
+
+{%     endfor %}
+{%   endif %}
+{% endfor %}
