@@ -1,0 +1,13 @@
+---
+bgp:
+  asn: 65513
+  router_id: 3.3.3.3
+  networks:
+    - 10.10.13.0/24
+  neighbors:
+    - ip_address: 10.10.10.1
+      asn: 65511
+      name: csr1
+    - ip_address: 10.10.12.2
+      asn: 65512
+      name: csr2

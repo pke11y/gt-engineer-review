@@ -1,0 +1,7 @@
+Device,BGP Neighbor,BGP Neighbor ASn,Status
+csr2,10.10.10.1,65511,Idle
+csr1,10.10.12.2,65512,Idle
+csr3,10.10.10.1,65511,Idle
+csr2,10.10.13.3,65513,Idle
+csr1,10.10.13.3,65513,Idle
+csr3,10.10.12.2,65512,Idle

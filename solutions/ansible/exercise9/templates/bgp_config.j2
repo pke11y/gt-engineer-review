@@ -1,0 +1,18 @@
+router bgp {{ bgp['asn'] }}
+ no synchronization
+ bgp router-id {{ bgp['router_id'] }}
+ bgp log-neighbor-changes
+{% for network in bgp['networks'] %}
+ network {{ network.split('/')[0] }} mask {{ network | ipaddr('netmask') }}
+{% endfor %}
+{% for neighbor in bgp['neighbors'] %}
+ neighbor {{ neighbor['ip_address'] }} remote-as {{ neighbor['asn'] }}
+ neighbor {{ neighbor['ip_address'] }} description {{ neighbor['name'] }}
+{%   if "community" in neighbor %}
+ neighbor {{ neighbor['ip_address'] }} send-community
+{%   endif %}
+{%   if "soft" in neighbor %}
+ neighbor {{ neighbor['ip_address'] }} soft-reconfiguration inbound
+{%   endif %}
+{% endfor %}
+ no auto-summary
