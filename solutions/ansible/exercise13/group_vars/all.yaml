@@ -1,0 +1,30 @@
+---
+interfaces_config:
+  - name: Eth1
+    description: "Uplink to core switch"
+    speed: 1000
+    duplex: full
+    status: true
+  - name: Eth2
+    description: "Uplink to backup switch"
+    speed: 1000
+    duplex: full
+    status: true
+  - name: Eth3
+    description: "CEO Port"
+    speed: auto
+    duplex: full
+    status: false
+  - name: Eth4
+    speed: 1000
+    duplex: full
+    status: false
+  - name: Eth5
+    description: "Wireless AP"
+    speed: auto
+    duplex: full
+    status: false
+  - name: Eth6
+    speed: 1000
+    duplex: full
+    status: false
