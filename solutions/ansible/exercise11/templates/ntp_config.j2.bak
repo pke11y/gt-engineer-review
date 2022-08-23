@@ -1,0 +1,14 @@
+{% if "nyc" in group_names %}
+{%   import "nyc_servers.j2" as ntp %}
+{% elif "dal-rt06" == inventory_hostname %}
+{%   import "dal_rt06_servers.j2" as ntp %}
+{% else %}
+{%   import "all_servers.j2" as ntp %}
+{% endif %}
+{% for item in ntp.servers %}
+{%   if loop.first %}
+ntp server {{ item }} prefer
+{%   else %}
+ntp server {{ item }}
+{%   endif %}
+{% endfor %}
