@@ -3,7 +3,7 @@
   name: Ping checks for reachability
   gather_facts: false
   vars:
-    probes_sent: 1
+    probes_sent: 5
   tasks:
 
     - name: Ping checks
@@ -19,7 +19,7 @@
         host_results: "{{ host_results|default([]) + [ {
             'dest': item.item,
             'packet_loss': item.ping_results.success.packet_loss,
-            'percentage': item.ping_results.success.packet_loss % probes_sent
+            'percentage': (1 - item.ping_results.success.packet_loss / probes_sent) * 100
              } ] }}"
       loop: "{{ output['results'] }}"
       ignore_errors: true
@@ -27,20 +27,10 @@
     - name: Register necessary variables
       ansible.builtin.set_fact:
         date: "{{ lookup('pipe', 'date +%Y%m%d%H%M') }}"
-
-    - name: Create csv file and add header
-      ansible.builtin.lineinfile:
+    
+    - name: Generate csv report
+      ansible.builtin.template:
+        src: "ping_report.j2"
         dest: "reports/report_{{ date }}.csv"
-        line:
-          Device,Destination,Success Rate,Status
-        create: true
-        state: present
-
-    - name: Write report into .csv file
-      ansible.builtin.lineinfile:
-        insertafter: EOF
-        dest: "reports/report_{{ date }}.csv"
-        line: "{{ inventory_hostname }},{{ item['dest'] }},{{
-          item['packet_loss'] }},{{ item['percentage'] }}%,
-          {% if item['percentage']>=80 %}Success{% else %}Failure{% endif %}"
-      loop: "{{ host_results }}"
+      delegate_to: localhost
+      run_once: true
