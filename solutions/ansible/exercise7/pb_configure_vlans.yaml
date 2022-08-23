@@ -11,4 +11,4 @@
       vars:
         vlan_id: 10
         vlan_name: web_vlan
-        state: present  # present / absent
+        state: merged  # merged, deleted

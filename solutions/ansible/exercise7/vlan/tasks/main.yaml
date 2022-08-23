@@ -1,6 +1,0 @@
----
-- name: Merge provided configuration with device configuration.
-  ansible.netcommon.net_vlan:
-    vlan_id: "{{ vlan_id }}"
-    name: "{{ vlan_name }}"
-    state: "{{ state }}"
