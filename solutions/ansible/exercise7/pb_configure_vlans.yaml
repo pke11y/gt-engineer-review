@@ -1,0 +1,14 @@
+---
+- name: DEPLOY VLANS
+  hosts: eos,nxos
+  # hosts: nxos
+  connection: network_cli
+  gather_facts: false
+
+  tasks:
+    - import_role:
+        name: vlan
+      vars:
+        vlan_id: 10
+        vlan_name: web_vlan
+        state: merged  # merged, deleted
