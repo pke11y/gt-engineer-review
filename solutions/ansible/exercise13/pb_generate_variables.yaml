@@ -13,20 +13,18 @@
           rejectattr('description', 'defined') | list }}"
         first_non1000_speed_interface: "{{ interfaces_config |
           rejectattr('speed','equalto', 1000) | first }}"
-
-    - name: Generate dict of interfaces
-      set_fact:
-        dict_interfaces: "{{ dict_interfaces|default({}) | combine({
-            item['name']: {}
-          }) }}"
-      loop: "{{ interfaces_config }}"
+        dict_interfaces: "{{ dict(interfaces_config | 
+          map(attribute='name') | zip(interfaces_config)) }}"
+        fancier_dict_interfaces: "{{ interfaces_config | 
+          rekey_on_member('name') }}"
 
     - name: Print all variables
       debug:
         var: "{{ item }}"
-      with_items:
+      loop:
         - list_ordered_interfaces
         - list_auto_speed_interfaces
         - list_no_desc_interfaces
         - first_non1000_speed_interface
         - dict_interfaces
+        - fancier_dict_interfaces
