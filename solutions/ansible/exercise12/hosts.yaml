@@ -1,0 +1,79 @@
+---
+all:
+  children:
+    ios:
+      hosts:
+        csr1:
+          local_user: memos_csr1
+          local_password: memos123
+
+        csr2:
+          local_user: memos_csr2
+          local_password: memos2121
+
+        csr3:
+          local_user: memos_csr3
+          local_password: memosggfg
+
+    eos:
+      hosts:
+        eos-leaf1:
+          local_user: memos_eos_leaf
+          local_password: passeos_leaf
+
+        eos-leaf2:
+          local_user: memos_eos_leaf
+          local_password: ffff
+        eos-spine1:
+          local_user: memos_eos_leaf
+          local_password: passaaa
+        eos-spine2:
+          local_user: memos_eos_leaf
+          local_password: pass3434
+
+    nxos:
+      hosts:
+        nxos-spine1:
+          local_user: memos_nxos
+          local_password: pass3gdsg
+        nxos-spine2:
+          local_user: memos_nxos
+          local_password: pass_kmjk2
+
+    vmx:
+      hosts:
+        vmx1:
+          local_user: memos_vmx
+          local_password: secy_password
+        vmx2:
+          local_user: memos_vmx
+          local_password: jkfdjsjfdpp
+        vmx3:
+          local_user: memos_vmx
+          local_password: 9903mjnmkd
+
+    new_york:
+      children:
+        nxos:
+
+    california:
+      children:
+        ios:
+
+    arizona:
+      children:
+        eos:
+
+    jersey:
+      children:
+        vmx:
+
+    west_cost:
+      children:
+        california:
+        arizona:
+
+    east_coast:
+      children:
+        jersey:
+        new_york:
