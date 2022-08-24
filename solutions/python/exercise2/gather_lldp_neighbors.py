@@ -4,7 +4,7 @@ import logging
 from pathlib import Path
 import json
 import yaml
-from yaml.loader import FullLoader
+from yaml.loader import SafeLoader
 from napalm import get_network_driver
 from constants import USERNAME, PASSWORD
 
@@ -37,8 +37,8 @@ def get_lldp_neighbors(device_info: dict) -> dict:
     return device_lldp_neighbors
 
 
-def replace_dict_key(lldp_neighbors: dict) -> dict:
-    """Replace keys for neighbors under interfaces in dict.
+def rename_dict_keys(lldp_neighbors: dict) -> dict:
+    """Rename keys for neighbors under interfaces in dict.
 
     Args:
         lldp_neighbors (dict): full dict with lldp information
@@ -62,17 +62,12 @@ def write_json_file(file_name: str, text: dict) -> None:
         file_name (str): file name and parent dir
         text (dict): json to be written
     """
-    # Create parent directory if not exists
-    file_dir = Path(file_name).parent.absolute()
-    if not file_dir.exists():
-        logging.info(f"Creating directory { file_dir } for backups")
-        file_dir.mkdir(parents=True)
 
     try:
         logging.info(f"Write output to file { file_name }")
         with open(file_name, "w", encoding="UTF-8") as f:
             f.write(json.dumps(text))
-    except IOError as err:
+    except OSError as err:
         logging.error(f"File { file_name } could not be opened!")
         logging.error(f"I/O error { err.errno } '{ err.strerror }'")
 
@@ -87,10 +82,10 @@ def read_yaml(file_name: str) -> dict:
         dict: data from yaml file
     """
     try:
-        logging.info(f"Read data from { file_name }")
+        logging.debug(f"Read data from { file_name }")
         with open(file_name, encoding="UTF-8") as f:
-            yaml_data = yaml.load(f, Loader=FullLoader)
-    except IOError as err:
+            yaml_data = yaml.load(f, Loader=SafeLoader)
+    except OSError as err:
         logging.error(f"Yaml data file { file_name } could not be opened!")
         logging.error(f"I/O error { err.errno } '{ err.strerror }'")
         sys.exit(1)
@@ -101,15 +96,15 @@ def read_yaml(file_name: str) -> dict:
 def main() -> None:
     """Connect to devices and get lldp neighbors."""
     logging.basicConfig(level=logging.INFO)
-    devices_info = read_yaml("hosts.yaml")
+    inventory = read_yaml("hosts.yaml")
     lldp_neighbors = {}
 
-    for device, device_info in devices_info["devices"].items():
+    for device, device_info in inventory["devices"].items():
         device_info["username"] = USERNAME
         device_info["password"] = PASSWORD
         lldp_neighbors[device] = get_lldp_neighbors(device_info=device_info)
 
-    lldp_neighbors = replace_dict_key(lldp_neighbors)
+    lldp_neighbors = rename_dict_keys(lldp_neighbors)
     print(json.dumps(lldp_neighbors, indent=4))
     write_json_file(file_name="lldp_neighbors.json", text=lldp_neighbors)
 
