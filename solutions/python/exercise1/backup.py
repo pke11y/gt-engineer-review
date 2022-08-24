@@ -3,7 +3,7 @@ import sys
 import logging
 from pathlib import Path
 import yaml
-from yaml.loader import FullLoader
+from yaml.loader import SafeLoader
 from netmiko import (
     ConnectHandler,
     NetmikoTimeoutException,
@@ -36,24 +36,35 @@ def send_command(device: dict, command: str) -> str:
     return output
 
 
-def write_file(file_name: str, text: str):
+def create_parent_dir(dir_name: str) -> None:
+    """Create parent directory for backup files.
+
+    Args:
+        dir_name (str): file name with parent dir
+    """
+
+    try:
+        files_dir = Path(dir_name).absolute()
+        logging.info(f"Creating directory { dir_name } for backups if not exists")
+        files_dir.mkdir(parents=True, exist_ok=True)
+    except OSError as err:
+        logging.error(f"Could not create dir { dir_name }!")
+        logging.error(f"OS error { err.errno } '{ err.strerror }'")
+
+
+def write_file(file_name: str, text: str) -> None:
     """Write text to file.
 
     Args:
         file_name (str): file name and parent dir
         text (str): text to be written
     """
-    # Create parent directory if not exists
-    file_dir = Path(file_name).parent.absolute()
-    if not file_dir.exists():
-        logging.info(f"Creating directory { file_dir } for backups")
-        file_dir.mkdir(parents=True)
 
     try:
         logging.info(f"Write output to file { file_name }")
         with open(file_name, "w", encoding="UTF-8") as f:
             f.write(text)
-    except IOError as err:
+    except OSError as err:
         logging.error(f"File { file_name } could not be opened!")
         logging.error(f"I/O error { err.errno } '{ err.strerror }'")
 
@@ -68,10 +79,10 @@ def read_yaml(file_name: str) -> dict:
         dict: data from yaml file
     """
     try:
-        logging.info(f"Read data from { file_name }")
+        logging.debug(f"Read data from { file_name }")
         with open(file_name, encoding="UTF-8") as f:
-            yaml_data = yaml.load(f, Loader=FullLoader)
-    except IOError as err:
+            yaml_data = yaml.load(f, Loader=SafeLoader)
+    except OSError as err:
         logging.error(f"Yaml data file { file_name } could not be opened!")
         logging.error(f"I/O error { err.errno } '{ err.strerror }'")
         sys.exit(1)
@@ -82,13 +93,15 @@ def read_yaml(file_name: str) -> dict:
 def main() -> None:
     """Connect to devices and save the running config to files as backup."""
     logging.basicConfig(level=logging.INFO)
-    devices_info = read_yaml("hosts.yaml")
+    create_parent_dir(dir_name=BACKUP_DIR)
+    inventory = read_yaml("hosts.yaml")
 
-    for device, device_info in devices_info["devices"].items():
+    for device, device_info in inventory["devices"].items():
         device_info["username"] = USERNAME
         device_info["password"] = PASSWORD
         device_output = send_command(
-            device=device_info, command=COMMANDS[device_info["device_type"]]
+            device=device_info,
+            command=COMMANDS.get(device_info["device_type"], "show running-config"),
         )
         write_file(file_name=f"{BACKUP_DIR}/{device}.cfg", text=device_output)
 
