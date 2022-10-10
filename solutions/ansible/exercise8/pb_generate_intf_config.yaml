@@ -1,0 +1,30 @@
+---
+- hosts: localhost
+  name: Generate Interfaces Configs and push to devices
+  gather_facts: false
+  vars:
+    configs_dir: "configs"
+  tasks:
+    - name: Combine 1st interface dict with 1st profile
+      set_fact: 
+        merged_interfaces_01: "{{ merged_interfaces_01|default([]) + [[profiles_01[item['profile']],item]|combine] }}"
+      loop: "{{ interfaces_01 }}"
+
+    - name: Generate 1st Config with Jinja2
+      template:
+        src: "interfaces.j2"
+        dest: "{{ configs_dir }}/interface_config_01.cfg"
+      vars: 
+        interfaces: "{{ merged_interfaces_01 }}"
+
+    - name: Combine 2nd interface dict with 2nd profile
+      set_fact: 
+        merged_interfaces_02: "{{ merged_interfaces_02|default([]) + [[profiles_02[item['profile']],item]|combine] }}"
+      loop: "{{ interfaces_02 }}"
+
+    - name: Generate 2nd Config with Jinja2
+      template:
+        src: "interfaces.j2"
+        dest: "{{ configs_dir }}/interface_config_02.cfg"
+      vars: 
+        interfaces: "{{ merged_interfaces_02 }}"

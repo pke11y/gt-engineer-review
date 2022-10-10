@@ -1,0 +1,16 @@
+{% for interface in interfaces %}
+interface {{ interface['name'] }}
+  switchport mode access
+  switchport access vlan {{ interface['access_vlan'] }}
+{%   if 'speed' in interface %}
+  speed {{ interface['speed'] }}
+{%   endif %}
+{%   if 'duplex' in interface %}
+  duplex {{ interface['duplex'] }}
+{%   endif %}
+{%   if interface.get('admin_state') == 'down' %}
+  shutdown
+{%   else %}
+  no shutdown
+{%   endif %}
+{% endfor %}

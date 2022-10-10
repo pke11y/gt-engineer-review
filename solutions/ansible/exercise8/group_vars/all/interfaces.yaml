@@ -1,0 +1,28 @@
+---
+interfaces_01:
+  - name: Eth1
+    profile: user
+  - name: Eth2
+    profile: user
+  - name: Eth3
+    profile: server
+
+interfaces_02:
+  - name: Eth1
+    profile: user
+    speed: 10
+  - name: Eth2
+    profile: user
+  - name: Eth3
+    profile: server
+    access_vlan: 200
+
+profiles_02:
+  user:
+    access_vlan: 10
+    admin_state: up
+    speed: 100
+    duplex: full
+  server:
+    access_vlan: 100
+    admin_state: down
