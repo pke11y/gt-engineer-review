@@ -27,4 +27,4 @@
         src: "interfaces.j2"
         dest: "{{ configs_dir }}/interface_config_02.cfg"
       vars: 
-        interfaces: "{{ merged_interfaces_01 }}"
+        interfaces: "{{ merged_interfaces_02 }}"
